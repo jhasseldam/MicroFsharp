@@ -1,0 +1,7 @@
+fun mul x y z : int -> int -> int -> int  = 
+	x * y + z
+end
+
+let result = mul 5 6 2 end
+
+result

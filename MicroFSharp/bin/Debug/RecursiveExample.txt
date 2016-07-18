@@ -1,0 +1,10 @@
+fun sum n : int -> int = 
+	if n > 1 then n + sum (n-1) else 1
+end
+fun test x y : int -> int -> int = 
+	x * y
+end
+
+let a : int = test 1 2 3 end
+
+10+10

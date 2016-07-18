@@ -1,0 +1,12 @@
+fun applyToX f x : (int -> int) -> int -> int = 
+	f(x)
+end 
+
+fun mul y : int -> int = 
+	y * y
+end
+
+let partial : int -> int = applyToX(mul) end
+let result : int = partial(10) end
+
+10+10

@@ -1,0 +1,25 @@
+fun findBest curBest lowest next : int -> int -> int -> int  = 
+    let bestCandidate = next - lowest in
+    if bestCandidate > curBest then bestCandidate else curBest
+end
+
+fun maxProfit lowest best lst : int -> int -> list -> int = 
+    match lst with
+    | Nil -> best
+    | Cons(x, xs) -> let newLowest = if x < lowest then x else lowest in
+                     let newBest = findBest best lowest x in
+                     maxProfit newLowest newBest xs
+    end
+end
+
+fun calcMaxProfit lst : list -> int =
+    match lst with
+    | Nil -> 0
+    | Cons(x, xs) -> maxProfit x 0 xs
+    end
+end
+
+let myList = [2; 5; 1; 3; 5; 10; 4; 15; 7; 1; 13] in
+let result = calcMaxProfit myList in
+do print result in
+0  

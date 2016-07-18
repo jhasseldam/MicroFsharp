@@ -1,0 +1,47 @@
+
+fun sumList lst : list -> int = 
+	match lst with
+	| Nil -> 0
+	| Cons(x, xs) -> x + sumList(xs)
+	end
+end
+
+fun sumTree binTree : tree -> int = 
+	match binTree with
+	| Node(val, left, right) -> val + (sumTree left) + (sumTree right) 
+	| Leaf -> 0
+	end
+end 
+
+fun check b : bool -> int = 
+	if b then 1 else 0
+end
+
+fun sum n : int -> int = 
+	if n > 1 then n + sum(n-1) else 1
+end
+
+fun applyToX f x : (int -> int) -> int -> int = 
+	f(x)
+end 
+
+fun mul y : int -> int = 
+	y * y
+end
+
+
+fun mul2 x: int -> int =
+	let result : int = sumList (Cons(x, Nil)) end
+	result
+end
+
+
+let partial : int -> int = applyToX(mul) end
+let result : int = partial(10) end
+
+let myList : list = Cons(10, Nil) end
+let tmp : int = sum 10 end
+let result : int = sumList myList end
+
+10+10
+

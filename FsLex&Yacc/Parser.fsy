@@ -1,0 +1,149 @@
+%{
+open Ast
+
+let genName () = "var_" + System.Guid.NewGuid().ToString().Replace("-", "")
+%}
+
+%token <int> CSTINT
+%token <string> NAME
+%token <bool> CSTBOOL
+
+%token ELSE END FALSE IF IN LET DO FUN NOT THEN TRUE ARROW INTTYPE BOOLTYPE LISTTYPE TREETYPE COLON MATCH WITH COMMA PIPE NIL CONS LEAF NODE DCOLON SCOLON
+%token ADD MIN MUL DIV MOD
+%token EQ NE GT LT GE LE
+%token LPAR RPAR LSB RSB
+%token EOF
+
+%left ELSE END IN      /* lowest precedence  */
+%left EQ NE 
+%left GT LT GE LE
+%right DCOLON
+%left ADD MIN
+%left MUL DIV MOD
+%right ARROW
+%nonassoc NOT          /* highest precedence  */
+
+%start Main
+%type <Ast.Expr> Expr AtExpr Const
+%type <Ast.Expr> AppExpr
+%type <Ast.Program> Main Program
+%type <Ast.FuncDef> FuncDef
+%type <Ast.FuncDef list> FuncDefs
+%type <Ast.TypeDef> TypeDef
+%type <Ast.MatchExpr> MatchExpr
+%type <Ast.MatchExpr list> MatchExprs
+%type <Ast.MatchExpr * Ast.Expr> MatchCase
+%type <(Ast.MatchExpr * Ast.Expr) list> MatchCases
+%type <Ast.Expr> Match
+%type <Ast.Expr> Constructor
+%type <Ast.Constructor> ListValues
+%%
+
+Main:
+    Program EOF                             { $1 }
+;
+
+Program: 
+    FuncDefs Expr                           { Program($1, $2) }
+  | Expr                                    { Program([], $1) }  
+;
+
+FuncDefs:
+    FuncDef FuncDefs                        { $1::$2 }
+  | FuncDef                                 { [$1] }
+;
+
+FuncDef:
+    FUN NAME ArgDefs COLON TypeDef EQ Expr END  { FuncDef($2, $3, $5, $7) }
+;
+
+Match:
+    MATCH Expr WITH MatchCases END   { Match($2, $4) } 
+
+MatchCases:
+      MatchCase MatchCases           { $1::$2 }
+    | MatchCase                      { [$1] } 
+;
+
+MatchCase: 
+      PIPE MatchExpr ARROW Expr      { ($2, $4) } 
+;
+
+MatchExprs:
+      MatchExpr COMMA MatchExprs     { $1::$3 } 
+    | MatchExpr                      { [$1] }
+;
+
+MatchExpr:
+      NIL                                        { NilMatch }
+    | CONS LPAR NAME COMMA NAME RPAR             { ConsMatch($3, $5) }
+    | LEAF                                       { LeafMatch }
+    | NODE LPAR NAME COMMA NAME COMMA NAME RPAR  { NodeMatch($3, $5, $7) }
+; 
+
+ListValues: 
+      Expr                                       { Cons($1, Constructor(Nil)) }                                      
+    | Expr SCOLON ListValues                     { Cons($1, Constructor($3)) }
+;
+
+Constructor: 
+      NIL                                        { Constructor(Nil) }
+    | CONS LPAR Expr COMMA Expr RPAR             { Constructor(Cons($3, $5)) }
+    | LEAF                                       { Constructor(Leaf) }
+    | NODE LPAR Expr COMMA Expr COMMA Expr RPAR  { Constructor(Node($3, $5, $7)) }
+    | Expr DCOLON Expr                           { Constructor(Cons($1, $3)) }
+    | LSB ListValues RSB                         { Constructor($2) }
+    | LSB RSB                                    { Constructor(Nil) }
+;
+
+Expr:
+    AtExpr                                  { $1                          }
+  | AppExpr                                 { $1                          }
+  | Constructor                             { $1                          }
+  | LET NAME EQ Expr IN Expr               { Let($2, $4, $6)             }
+  | DO Expr IN Expr                        { Let(genName (), $2, $4)     }
+  | IF Expr THEN Expr ELSE Expr             { If($2, $4, $6)              }
+  | Match                                   { $1                          }
+  | MIN Expr                                { PrimOp("-", ConstInt 0, $2) }
+  | Expr ADD  Expr                          { PrimOp("+",  $1, $3)        }
+  | Expr MIN Expr                           { PrimOp("-",  $1, $3)        }
+  | Expr MUL Expr                           { PrimOp("*",  $1, $3)        }
+  | Expr DIV Expr                           { PrimOp("/",  $1, $3)        }     
+  | Expr MOD Expr                           { PrimOp("%",  $1, $3)        }
+  | Expr EQ  Expr                           { PrimOp("=",  $1, $3)        }
+  | Expr NE  Expr                           { PrimOp("<>", $1, $3)        }
+  | Expr GT  Expr                           { PrimOp(">",  $1, $3)        }
+  | Expr LT  Expr                           { PrimOp("<",  $1, $3)        }
+  | Expr GE  Expr                           { PrimOp(">=", $1, $3)        }
+  | Expr LE  Expr                           { PrimOp("<=", $1, $3)        }
+;
+
+AtExpr:
+    Const                               { $1                     }
+  | NAME                                { Var $1                 }
+  | LPAR Expr RPAR                      { $2                     }
+;
+
+AppExpr:
+    AtExpr AtExpr                       { FunCall($1, $2)        }
+  | AppExpr AtExpr                      { FunCall($1, $2)        }
+;
+
+Const:
+    CSTINT                              { ConstInt($1)     }
+  | CSTBOOL                             { ConstBool($1)    }
+;
+
+ArgDefs:
+    NAME ArgDefs                        { $1::$2 }
+  | NAME                                { [$1] }                              
+;
+
+TypeDef:      
+    TypeDef ARROW TypeDef               { FuncType($1, $3) }
+  | LPAR TypeDef RPAR                   { $2 }
+  | INTTYPE                             { IntType }
+  | BOOLTYPE                            { BoolType }
+  | LISTTYPE							              { ListType }
+  | TREETYPE                            { TreeType }
+;

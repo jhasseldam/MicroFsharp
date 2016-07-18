@@ -1,0 +1,15 @@
+fun highest x y : int -> int -> int = 
+  if x > y then x else y
+end
+
+fun fold f val lst : (int -> int -> int) -> int -> list -> int = 
+    match lst with
+    | Nil -> val
+    | Cons(x, xs) -> fold f (f x val) xs
+    end
+end
+
+let myList = [1; 4; 6; -123; 3; 54; 2; 123; 43; 23; 9; 34; 122] in
+let result = fold highest 0 myList in
+do print result in
+0

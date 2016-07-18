@@ -1,0 +1,21 @@
+fun printListElements lst : list -> int = 
+	match lst with
+	| Nil -> 0 
+	| Cons(x, xs) -> 
+		match xs with
+		| Nil -> print x
+		| Cons(y, ys) ->
+			do print x in
+			do printAscii 59 in
+			do printAscii 32 in
+			printListElements xs
+		end
+	end
+end
+
+fun printList lst : list -> int = 
+	do printAscii 91 in
+	do printListElements lst in
+	do printAscii 93 in
+	0
+end

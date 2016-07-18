@@ -1,0 +1,31 @@
+fun addNum newNum binTree : int -> tree -> tree =
+    match binTree with 
+    | Leaf -> Node(newNum, Leaf, Leaf)
+    | Node(val, left, right) -> if newNum < val 
+                                then Node(val, (addNum newNum left), right)
+                                else Node(val, left, (addNum newNum right))
+    end
+end
+
+fun addNums lstNums binTree : list -> tree -> tree = 
+    match lstNums with
+    | Nil -> binTree
+    | Cons(x, xs) -> addNums xs (addNum x binTree)
+    end
+end
+
+fun findNum num binTree : int -> tree -> bool = 
+    match binTree with
+    | Leaf -> false
+    | Node(val, left, right) -> if num = val then true 
+                                else if num < val then findNum num left 
+                                else findNum num right
+    end
+end
+
+let myNums = [8; 3; 2; 7; 12; 1; 5; 9; 14; 10] in  
+let emptyTree = Leaf in
+let myTree = addNums myNums emptyTree in
+let numFound = findNum 5 myTree in
+do print numFound in
+0

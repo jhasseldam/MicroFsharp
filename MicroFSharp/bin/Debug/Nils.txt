@@ -1,0 +1,48 @@
+fun map f xs : (int -> int) -> list -> list  = 
+	match xs with
+	| Nil -> []
+	| Cons(x, rest) -> f x :: map f rest
+	end 
+end
+
+fun square x : int -> int =
+	do print x end
+	do printAscii 32 end
+	do print true end
+	do printAscii 10 end
+	x * x
+end
+
+fun run x : int -> list =
+	let lst = [1; 2; 3; 4; 5; x] end
+	let result = map square lst end
+	result
+end
+
+fun printListElements lst : list -> int = 
+	match lst with
+	| Nil -> 0 
+	| Cons(x, xs) -> 
+		match xs with
+		| Nil -> print x
+		| Cons(y, ys) ->
+			do print x end
+			do printAscii 59 end
+			do printAscii 32 end
+			printListElements xs
+		end
+    end
+end
+
+fun printList lst : list -> int = 
+	do printAscii 91 end
+	do printListElements lst end
+	do printAscii 93 end
+	0
+end
+
+let myList = [1; 2; 3; 4; 5; 6] end
+do printList myList end
+do printAscii 10 end
+
+0

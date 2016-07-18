@@ -1,0 +1,13 @@
+fun calcSetCombination set1 set2 set3 : int -> int -> int -> int = 
+    set1 * set2 * set3
+end
+
+let students = 50 in
+let pizzaTypes = 10 in
+let beverageTypes = 5 in
+
+let studentsBound = calcSetCombination students in
+let pizzaStudentsBound = studentsBound pizzaTypes in 
+let totalCombinations = pizzaStudentsBound beverageTypes in 
+do print totalCombinations in 
+0

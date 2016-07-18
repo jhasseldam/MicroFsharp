@@ -1,0 +1,16 @@
+fun nEven n : int -> list =
+    if n = 0 then []
+    else if n % 2 = 0 then n::nEven(n-1) else nEven(n-1)
+end
+
+fun count lst : list -> int =
+    match lst with
+    | Nil -> 0
+    | Cons(x, xs) -> 1 + (count xs)
+    end
+end
+
+let evenNums = nEven 800 in
+let length = count evenNums in
+do print length in
+0

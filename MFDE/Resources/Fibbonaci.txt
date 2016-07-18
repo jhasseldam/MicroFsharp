@@ -1,0 +1,8 @@
+fun fib a b max : int -> int -> int -> list =
+   let next = a + b in
+   if a < max then a::(fib b next max) else []
+end
+
+let result = fib 1 2 100 in 
+do printList result in
+0

@@ -1,0 +1,12 @@
+fun double n : int -> int = 
+	n * 2
+end
+
+fun map f lst : (int -> int) -> list -> list =
+	match lst with
+	| Nil -> [1]
+	| Cons(x, xs) -> (f x)::(map f xs)
+	end
+end
+
+10+10

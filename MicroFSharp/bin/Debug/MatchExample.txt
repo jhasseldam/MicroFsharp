@@ -1,0 +1,11 @@
+fun sum lst : list -> int = 
+	match lst with
+	| Nil -> 0
+	| Cons (x, rest) -> x + (sum rest)
+	end
+end
+
+let myList : list = [1; 2; 3] end
+let result : int = sum myList end
+
+10+result

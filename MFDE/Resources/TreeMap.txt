@@ -1,0 +1,15 @@
+fun map f binTree : (int -> int) -> tree -> tree =
+   match binTree with
+   | Leaf -> Leaf
+   | Node(x, left, right) -> Node((f x), (map f left), (map f right))
+   end
+end
+
+fun square x : int -> int = 
+    x * x
+end
+
+let myTree = Node(1, Node(2, Leaf, Leaf), Node(3, Leaf, Leaf)) in
+let resultTree = map square myTree in
+do printTree resultTree in
+0

@@ -1,0 +1,6 @@
+fun sumNTail n acc : int -> int -> int = 
+    if n > 0 then sumNTail (n-1) (acc+n) else acc
+end
+
+
+0

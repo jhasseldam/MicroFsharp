@@ -1,0 +1,25 @@
+fun nEvenTail n outLst : int -> list -> list =
+    if n = 0 then outLst
+    else if n % 2 = 0 then nEvenTail (n-1) (n::outLst) else nEvenTail (n-1) outLst
+end
+
+fun countTail lst c : list -> int -> int =
+    match lst with
+    | Nil -> c
+    | Cons(x, xs) -> countTail xs (c+1)
+    end
+end
+
+fun nEven n : int -> list =
+    let empty = [] in
+    nEvenTail n empty
+end
+
+fun count lst : list -> int = 
+    countTail lst 0
+end
+
+let evenNums = nEven 2000 in
+let length = count evenNums in
+do print length in
+0

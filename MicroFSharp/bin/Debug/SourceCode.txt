@@ -1,0 +1,17 @@
+fun myFun x y : (int -> bool) -> int -> int = 
+   if f x then x else 0 
+end
+
+fun mul x y z : int -> int -> int -> int = 
+    x * y * z
+end
+fun applyToFour f : (int ->  int) -> int =
+    f(4)
+end
+
+let mulFive : int -> int -> int = mul(5) end
+let mulTwenty : int -> int = mulFive(4) end
+let result : int = applyToFour(mulTwenty) end
+
+25 + result
+

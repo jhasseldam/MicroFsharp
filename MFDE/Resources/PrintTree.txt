@@ -1,0 +1,12 @@
+fun printTree myTree : tree -> int = 
+  match myTree with
+  | Leaf -> do printAscii 91 in
+      printAscii 93
+  | Node(x, left, right) -> 
+        do printAscii 91 in
+        do print x in
+        do printTree left in
+        do printTree right in
+        printAscii 93
+  end
+end

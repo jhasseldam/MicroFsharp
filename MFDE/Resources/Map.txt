@@ -1,0 +1,15 @@
+fun map f lst : (int -> int) -> list -> list =
+    match lst with
+    | Nil -> []
+    | Cons(x, xs) -> f x :: map f xs
+    end
+end
+
+fun negate n : int -> int = 
+    n * -1
+end
+
+let nums = [1; -2; 3; -4; 5; -6; 7; -8; 9; -10] in
+let negatedNums = map negate nums in
+do printList negatedNums in
+0 

@@ -1,0 +1,17 @@
+fun sum x : int -> int = 
+	if x > 1 then 
+	    sum(x - 1) + x
+    else 1
+end 
+
+fun fib n : int -> int = 
+	if n = 0 then
+		0
+	else if n = 1 then
+		1 
+	else
+		fib(n - 1) + fib(n - 2)
+end
+let a = fib(5) end
+let b = sum(5) end
+a + b
